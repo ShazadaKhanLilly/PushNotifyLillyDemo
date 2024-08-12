@@ -5,6 +5,10 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.pushnotifylillydemo.data.User
 
+/**
+ * UserDao interface
+ */
+
 @Dao
 interface UserDao {
     @Insert

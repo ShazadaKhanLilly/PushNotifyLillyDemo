@@ -11,16 +11,17 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.pushnotifylillydemo.MainActivity
-import com.example.pushnotifylillydemo.utility.PreferencesHelper
+import com.example.pushnotifylillydemo.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
-class MyFirebaseMessagingService : FirebaseMessagingService() {
+class PushNotificationLillyService : FirebaseMessagingService() {
 
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        Log.d("PushNotificationLilly", "Service created")
     }
 
     private fun createNotificationChannel() {
@@ -28,7 +29,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val channelId = "default_channel"
             val name = "Default Channel"
             val descriptionText = "Channel for general notifications"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(channelId, name, importance).apply {
                 description = descriptionText
             }
@@ -38,34 +39,30 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        super.onMessageReceived(remoteMessage)
+    override fun onMessageReceived(message: RemoteMessage) {
+        super.onMessageReceived(message)
+        Log.d("PushNotificationLilly", "Message received: ${message.data}")
 
-        Log.d("PushNotificationLilly", "Message received")
+        // Extract data from the notification payload
+        val data = message.data
+        val title = message.notification?.title?: "Default Title"
+        val body = message.notification?.body ?: "Default Body Text"
+        val url = data["url"] ?: return
 
-        // Extract data from the push notification
-        val data = remoteMessage.data
-        val notificationDrug = data["drug"] ?: return
-
-        // Get the user's condition
-        val userDrug = PreferencesHelper.getUserDrug(applicationContext)
-
-        // Check if the notification should be sent to the user
-        if (userDrug != null && userDrug == notificationDrug) {
-            Log.d("PushNotificationLilly", "Received notification for $notificationDrug")
-            sendNotification(data["title"], data["body"], data["url"])
-        } else {
-            Log.d("PushNotificationLilly", "Notification not for user")
-        }
+        // Send the notification with the provided URL
+        sendNotification(title, body, url)
     }
 
     private fun sendNotification(title: String?, body: String?, url: String?) {
+        Log.d("PushNotificationLilly", "Sending notification: $title, $body, $url")
+        // Create the intent for navigation
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             putExtra("navigate_to_support", true)
             putExtra("url_to_load", url)
         }
 
+        // Create the pending intent
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             this,
             0,
@@ -73,10 +70,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        // Build and send the notification
         val builder = NotificationCompat.Builder(this, "default_channel")
+            .setSmallIcon(R.drawable.alert_red)
             .setContentTitle(title)
             .setContentText(body)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body)) // Expandable notification
+            .setPriority(NotificationCompat.PRIORITY_MAX)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 

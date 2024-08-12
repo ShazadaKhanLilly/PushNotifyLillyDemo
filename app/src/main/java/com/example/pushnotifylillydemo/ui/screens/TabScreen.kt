@@ -4,8 +4,16 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -50,8 +58,12 @@ fun TabScreen(
             Box(modifier = Modifier.padding(paddingValues)) {
                 when (selectedTab) {
                     0 -> HomeScreen(userDrug)
-                    1 -> SupportScreen(urlToLoad)  // Pass the URL to SupportScreen
-                    2 -> ProfileScreen(navController = navController, db = db, userEmail = userEmail)
+                    1 -> SupportScreen(urlToLoad = urlToLoad)
+                    2 -> ProfileScreen(
+                        navController = navController,
+                        db = db,
+                        userEmail = userEmail
+                    )
                 }
             }
         }

@@ -5,6 +5,10 @@ import androidx.room.RoomDatabase
 import com.example.pushnotifylillydemo.data.User
 import com.example.pushnotifylillydemo.data.dao.UserDao
 
+/**
+ * PushNotifyDatabase class
+ */
+
 @Database(entities = [User::class], version = 1)
 abstract class PushNotifyDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
