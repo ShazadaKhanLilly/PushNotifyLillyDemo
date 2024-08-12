@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "319832637775",
+    "project_id": "pushnotifylillydemo",
+    "storage_bucket": "pushnotifylillydemo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319832637775:android:179a4466c783d4f86c453a",
+        "android_client_info": {
+          "package_name": "com.example.pushnotifylillydemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkXtoY5Ntb8sUlvDVfLJfK5x0cwELUri8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
